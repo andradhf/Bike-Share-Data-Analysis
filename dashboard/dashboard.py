@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load your data
-df = pd.read_csv("day.csv")  # Ganti dengan path file datamu
+df = pd.read_csv("./day.csv") 
 
 # Sidebar for filters
 st.sidebar.title("Filter Data")
@@ -13,21 +13,21 @@ st.sidebar.title("Filter Data")
 season_filter = st.sidebar.multiselect("Select Season", options=df['season'].unique(), default=df['season'].unique())
 df_filtered = df[df['season'].isin(season_filter)]
 
-# Filter bulan (months)
+
 month_filter = st.sidebar.multiselect("Select Month", options=range(1, 13), default=range(1, 13))
 df_filtered = df_filtered[df_filtered['mnth'].isin(month_filter)]
 
-# Main title
+
 st.title("Bike Sharing Data Analysis")
 
-# Plot 1: Distribusi Peminjaman Berdasarkan Cuaca dan Musim
+
 st.header("Distribusi Peminjaman Berdasarkan Cuaca dan Musim")
 fig, ax = plt.subplots(figsize=(10, 6))
 sns.scatterplot(data=df_filtered, x="temp", y="cnt", hue="season", ax=ax)
 ax.set_title("Jumlah Penyewaan Sepeda Berdasarkan Suhu dan Musim")
 st.pyplot(fig)
 
-# Plot 2: Perkembangan Penyewaan Setiap Bulan
+
 st.header("Perkembangan Penyewaan Sepeda Setiap Bulan")
 df['mnth'] = pd.Categorical(df['mnth'], categories=range(1, 13))
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -35,12 +35,12 @@ sns.lineplot(data=df[df['mnth'].isin(month_filter)], x="mnth", y="cnt", ax=ax)
 ax.set_title("Jumlah Penyewaan Sepeda per Bulan")
 st.pyplot(fig)
 
-# Plot 3: Pola Perubahan Pengguna Karena Bencana Alam (Bulan 10 - 12 di Tahun 2012)
+
 st.header("Pola Perubahan Pengguna Karena Bencana Alam (2012)")
 cnt_in_2012_df = df.loc[df['yr'] == 1].groupby('mnth').agg({'cnt': 'mean'}).reset_index()
 cnt_in_2012_df = cnt_in_2012_df.loc[cnt_in_2012_df['mnth'].isin([10, 11, 12])]
 
-# Apply month filter to 2012 data
+
 cnt_in_2012_df = cnt_in_2012_df[cnt_in_2012_df['mnth'].isin(month_filter)]
 
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -51,13 +51,13 @@ ax.set_title('Rata-rata Jumlah Sewa Sepeda per Bulan di Tahun 2012 (Bulan 10 - 1
 ax.set_xticks(cnt_in_2012_df['mnth'])
 st.pyplot(fig)
 
-# Plot 4: Perbandingan Rata-rata Penyewa Registered vs Casual per Bulan
+
 st.header("Perbandingan Penyewa Sepeda Registered vs Casual per Bulan")
 user_df = df.groupby('mnth').agg({'registered': 'mean', 'casual': 'mean'}).reset_index()
 user_df_melted = user_df.melt(id_vars='mnth', value_vars=['registered', 'casual'], 
                                var_name='user_type', value_name='ctd')
 
-# Apply month filter to user type comparison
+
 user_df_melted = user_df_melted[user_df_melted['mnth'].isin(month_filter)]
 
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -65,7 +65,7 @@ sns.barplot(data=user_df_melted, x="mnth", y="ctd", hue="user_type", ax=ax, erro
 ax.set_title("Rata-rata Penyewa Sepeda (Registered vs Casual) per Bulan")
 st.pyplot(fig)
 
-# Insights
+
 st.sidebar.header("Insights")
 st.sidebar.text("""
 - Suhu dan musim berpengaruh besar terhadap jumlah penyewaan sepeda.
