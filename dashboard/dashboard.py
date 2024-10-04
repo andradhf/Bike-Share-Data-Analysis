@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load your data
-df = pd.read_csv("./day.csv") 
+df = pd.read_csv("../data/day.csv") 
 
 # Sidebar for filters
 st.sidebar.title("Filter Data")
